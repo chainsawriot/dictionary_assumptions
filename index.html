@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Three assumptions of dictionary-based methods (e.g. LIWC)</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Chung-hong Chan" />
+    <meta name="date" content="2020-11-15" />
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/tile-view-0.0.14/tile-view.css" rel="stylesheet" />
+    <script src="libs/tile-view-0.0.14/tile-view.js"></script>
+    <link href="libs/animate.css-xaringan-3.7.2/animate.fade.css" rel="stylesheet" />
+    <script src="libs/footer-0.0.3/footer.js"></script>
+    <link rel="stylesheet" href="mzes_fonts.css" type="text/css" />
+    <link rel="stylesheet" href="mzes.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Three assumptions of dictionary-based methods (e.g. LIWC)
+## automatedcontentanalysis.com
+### Chung-hong Chan
+### 2020-11-15
+
+---
+
+
+<script>
+(function() {
+let tries = 0
+function addLogo() {
+  if (typeof slideshow === 'undefined') {
+    ++tries < 10 ? setTimeout(addLogo, 100) : null
+    return
+  } else {
+  	document.querySelectorAll('.remark-slide-content:not(.title-slide):not(.inverse):not(.hide-logo)')
+    	.forEach(el => el.innerHTML += '<div class="xaringan-extra-logo"></div>')
+  }
+}
+document.addEventListener('DOMContentLoaded', addLogo)
+})()
+</script>
+<style type="text/css">
+.xaringan-extra-logo {
+  width: 280px;
+  height: 128px;
+  z-index: 0;
+  background-image: url(img/mzes_logo.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  position: absolute;
+  top:1em;right:1em;
+}
+</style>
+
+# 1. Domain specificity
+
+.pull-left[
+
+.large[
+* My cat is *bad*. (-1)
+
+* meine katze ist im *bad* (-1)
+
+* mijn kat *bad* voor je (-1)
+
+* my cat's **advantages** **trump** all *disadvantages* (+1)
+]]
+
+.pull-right[
+
+&lt;img src="img/bingliu.png" width="300px" /&gt;
+.extrasmall[(Liu 2015.)]
+
+]
+
+---
+
+
+```r
+require(quanteda)
+require(quanteda.dictionaries)
+documents &lt;- c(trump = "trump is bad",
+               biden = "biden is bad")
+dfm_lookup(dfm(documents),
+           dictionary = data_dictionary_HuLiu)
+```
+
+```
+## Document-feature matrix of: 2 documents, 2 features (25.0% sparse).
+##        features
+## docs    positive negative
+##   trump        1        1
+##   biden        0        1
+```
+
+---
+
+# 2. Bag of words
+
+.large[
+* my cat is *bad* (-1)
+
+* is my cat *bad* ? (-1)
+
+* cat *bad* is my (-1)
+
+* biden is **good** but **trump** is *bad* (+1)
+]
+
+---
+# 3. Additivity
+
+.large[
+* my cat is *bad* (-1)
+
+* my cat is very *bad* (-1)
+
+* my cat is not *bad* (-1)
+
+* my cat is *bad bad* (-2)
+
+* meine katze *war* im *bad* ... *bad*. jetzt ist sie ... äh ... noch im *bad*. (-4)
+
+* mijn kat *bad* en *bad* en God luistert eindelijk naar haar. (-2)
+]
+
+---
+
+# Limited validity
+
+.pull-left[
+&lt;img src="img/liwc3.png" width="600px" /&gt;
+
+.extrasmall[Young &amp; Soroka, 2012; Gilbert &amp; Hutto, 2014; González-Bailón &amp; Paltoglou, 2015; Ribeiro et al. 2016; Boukes et al. 2020]
+
+]
+
+.pull-right[
+&lt;img src="img/phack.png" width="600px" /&gt;
+
+.large[**Chan et al. (2020)**]
+
+]
+
+
+---
+
+# The solution: step 1 of n
+
+.pull-left[
+
+Validate, Validate, Validate
+
+-   Statistical validation
+
+-   Predictive validation
+
+-   **Semantic validation**
+
+(DiMaggio et al. 2013; Grimmer &amp; Stewart. 2013; Chan &amp; Sältzer, 2020)
+
+&lt;img src="img/oolong_logo.png" width="150px" /&gt;
+
+]
+
+.pull-right[
+
+
+&lt;img src="img/diag.png" width="500px" /&gt;
+
+]
+
+---
+class: inverse, middle, center
+
+# these 3 assumptions (domain specificity, bag of words and additivity) are remarkably delicate -  incredibly unreal, streamlined in thoughtfulness, and defeating its shiny promises. use these simplified methods with care.
+
+---
+
+
+```r
+document &lt;- "these 3 assumptions (domain specificity,
+bag of words and additivity)  are remarkably
+delicate -  incredibly unreal, streamlined in 
+thoughtfulness, and defeating its shiny promises.
+use these simplified methods with care."
+dfm_lookup(dfm(document,
+               ),dictionary = data_dictionary_HuLiu)
+```
+
+```
+## Document-feature matrix of: 1 document, 2 features (50.0% sparse).
+##        features
+## docs    positive negative
+##   text1       10        0
+```
+
+```r
+## Thanks for having me.
+```
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"countIncrementalSlides": false,
+"ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+(function(time) {
+  var d2 = function(number) {
+    return ('0' + number).slice(-2); // left-pad 0 to minutes/seconds
+  },
+
+  time_format = function(total) {
+    var secs = Math.abs(total) / 1000;
+    var h = Math.floor(secs / 3600);
+    var m = Math.floor(secs % 3600 / 60);
+    var s = Math.round(secs % 60);
+    var res = d2(m) + ':' + d2(s);
+    if (h > 0) res = h + ':' + res;
+    return res;  // [hh:]mm:ss
+  },
+
+  slide_number_div = function(i) {
+    return document.getElementsByClassName('remark-slide-number').item(i);
+  },
+
+  current_page_number = function(i) {
+    return slide_number_div(i).firstChild.textContent;  // text "i / N"
+  };
+
+  var timer = document.createElement('span'); timer.id = 'slide-time-left';
+  var time_left = time, k = slideshow.getCurrentSlideIndex(),
+      last_page_number = current_page_number(k);
+
+  setInterval(function() {
+    time_left = time_left - 1000;
+    timer.innerHTML = ' ' + time_format(time_left);
+    if (time_left < 0) timer.style.color = 'red';
+  }, 1000);
+
+  slide_number_div(k).appendChild(timer);
+
+  slideshow.on('showSlide', function(slide) {
+    var i = slide.getSlideIndex(), n = current_page_number(i);
+    // reset timer when a new slide is shown and the page number is changed
+    if (last_page_number !== n) {
+      time_left = time; last_page_number = n;
+      timer.innerHTML = ' ' + time_format(time); timer.style.color = null;
+    }
+    slide_number_div(i).appendChild(timer);
+  });
+})(60000);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
